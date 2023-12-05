@@ -2,5 +2,5 @@ mod days;
 mod util;
 
 pub fn main() {
-    days::day02::part2();
+    days::day03::part2();
 }
