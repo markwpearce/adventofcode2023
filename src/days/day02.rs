@@ -1,6 +1,6 @@
 use crate::util::read_data;
 use regex::Regex;
-use std::fmt;
+use std::{cmp, fmt};
 
 const TEST_DATA: [&str; 5] = [
     "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
@@ -84,8 +84,18 @@ pub fn part1() {
     for test_str in data {
         let game = parse_game(&test_str);
         if check_game(&game) {
-            sum += game.id.abs();
+            sum += game.id;
         }
+    }
+    println!("{sum}");
+}
+
+pub fn part2() {
+    let data = read_data::read_lines("./data/day02.txt");
+    let mut sum = 0;
+    for test_str in data {
+        let game = parse_game(&test_str);
+        sum += get_game_power(&game);
     }
     println!("{sum}");
 }
@@ -100,4 +110,17 @@ fn check_game(g: &Game) -> bool {
         }
     }
     return true;
+}
+
+fn get_game_power(g: &Game) -> i32 {
+    let mut min_red = 0;
+    let mut min_blue = 0;
+    let mut min_green = 0;
+
+    for r in &g.rounds {
+        min_red = cmp::max(min_red, r.red);
+        min_green = cmp::max(min_green, r.green);
+        min_blue = cmp::max(min_blue, r.blue);
+    }
+    return min_red * min_green * min_blue;
 }
